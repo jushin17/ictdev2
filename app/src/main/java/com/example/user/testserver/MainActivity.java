@@ -1,142 +1,167 @@
 package com.example.user.testserver;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.*;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
+import android.widget.Toast;
 
 
 import android.app.MediaRouteButton;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
+    // SharedPreferences에 저장할 때 key 값으로 사용됨
+    public static final String PROPERTY_REG_ID = "registration_id";
 
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String TAG = "MainActivity";
+    // SharedPreferences에 저장할 때 key 값으로 사용됨
+    public static final String PROPERTY_APP_VERSION = "appVersion";
 
-    private Button mRegistrationButton;
-    private ProgressBar mRegistrationProgressBar;
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private TextView mInformationTextView;
-    public void getInstanceIdToken() {
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
-    }
+    static String SENDER_ID = "11111111111"; // 프로젝트 아이디
+    static String SERVER_URL = "http://111.111.111.111:8080/gcm/sendGCMReg.do"; // 서버 주소
+    GoogleCloudMessaging gcm;
+    Context context;
+    String regid;
+    private Button btn;
 
-    /**
-     * LocalBroadcast 리시버를 정의한다. 토큰을 획득하기 위한 READY, GENERATING, COMPLETE 액션에 따라 UI에 변화를 준다.
-     */
-    public void registBroadcastReceiver(){
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-
-
-                if(action.equals(QuickstartPreferences.REGISTRATION_READY)){
-                    // 액션이 READY일 경우
-                    mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
-                    mInformationTextView.setVisibility(View.GONE);
-                } else if(action.equals(QuickstartPreferences.REGISTRATION_GENERATING)){
-                    // 액션이 GENERATING일 경우
-                    mRegistrationProgressBar.setVisibility(ProgressBar.VISIBLE);
-                    mInformationTextView.setVisibility(View.VISIBLE);
-                    mInformationTextView.setText(getString(R.string.registering_message_generating));
-                } else if(action.equals(QuickstartPreferences.REGISTRATION_COMPLETE)){
-                    // 액션이 COMPLETE일 경우
-                    mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
-                    mRegistrationButton.setText(getString(R.string.registering_message_complete));
-                    mRegistrationButton.setEnabled(false);
-                    String token = intent.getStringExtra("token");
-                    mInformationTextView.setText(token);
-                }
-
-            }
-        };
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        registBroadcastReceiver();
+        context = this;
 
-        // 토큰을 보여줄 TextView를 정의
-        mInformationTextView = (TextView) findViewById(R.id.informationTextView);
-        mInformationTextView.setVisibility(View.GONE);
-        // 토큰을 가져오는 동안 인디케이터를 보여줄 ProgressBar를 정의
-        mRegistrationProgressBar = (ProgressBar) findViewById(R.id.registrationProgressBar);
-        mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
-        // 토큰을 가져오는 Button을 정의
-        mRegistrationButton = (Button) findViewById(R.id.registrationButton);
-        mRegistrationButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * 버튼을 클릭하면 토큰을 가져오는 getInstanceIdToken() 메소드를 실행한다.
-             * @param view
-             */
+        btn = (Button) findViewById(R.id.button);
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                getInstanceIdToken();
+            public void onClick(View v) {
+                HttpUtil hu = new HttpUtil(context);
+                String[] params = {SERVER_URL, "KEY:1234", "REG:" + regid};
+                hu.execute(params);
             }
         });
 
-    }
+        // gcm 등록
+        gcm = GoogleCloudMessaging.getInstance(this); // GoogleCloudMessaging 클래스의 인스턴스를 생성한다
+        regid = getRegistrationId(context); // 기존에 발급받은 등록 아이디를 가져온다
 
-    /**
-     * 앱이 실행되어 화면에 나타날때 LocalBoardcastManager에 액션을 정의하여 등록한다.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(QuickstartPreferences.REGISTRATION_READY));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(QuickstartPreferences.REGISTRATION_GENERATING));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
-
-    }
-
-    /**
-     * 앱이 화면에서 사라지면 등록된 LocalBoardcast를 모두 삭제한다.
-     */
-    @Override
-    protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-        super.onPause();
-    }
-
-
-    /**
-     * Google Play Service를 사용할 수 있는 환경이지를 체크한다.
-     */
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Log.i(TAG, "This device is not supported.");
-                finish();
-            }
-            return false;
+        if (regid.isEmpty()) { // 기존에 발급된 등록 아이디가 없으면 registerInBackground 메서드를 호출해 GCM 서버에 발급을 요청한다.
+            System.out.println("************************************************* gcm 발급");
+            registerInBackground();
         }
-        return true;
+
+        System.out.println("************************************************* gcm regid : " + regid);
+
+    }
+    // 저장된 reg id 조회
+    private String getRegistrationId(Context context) {
+        final SharedPreferences prefs = getGCMPreferences(context); // 이전에 저장해둔 등록 아이디를 SharedPreferences에서 가져온다.
+        String registrationId = prefs.getString(PROPERTY_REG_ID, ""); // 저장해둔 등록 아이디가 없으면 빈 문자열을 반환한다.
+        if (registrationId.isEmpty()) {
+            System.out.println("************************************************* Registration not found.");
+            return "";
+        }
+
+        // 앱이 업데이트 되었는지 확인하고, 업데이트 되었다면 기존 등록 아이디를 제거한다.
+        // 새로운 버전에서도 기존 등록 아이디가 정상적으로 동작하는지를 보장할 수 없기 때문이다.
+        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+        int currentVersion = getAppVersion(context);
+        if (registeredVersion != currentVersion) { // 이전에 등록 아이디를 저장한 앱의 버전과 현재 버전을 비교해 버전이 변경되었으면 빈 문자열을 반환한다.
+            System.out.println("************************************************* App version changed.");
+            return "";
+        }
+        return registrationId;
+    }
+
+    private SharedPreferences getGCMPreferences(Context context) {
+        return getSharedPreferences(MainActivity.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+    }
+
+    private static int getAppVersion(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
+    // reg id 발급
+    private void registerInBackground() {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(context);
+                    }
+                    regid = gcm.register(SENDER_ID);
+                    msg = "Device registered, registration ID=" + regid;
+
+                    // 서버에 발급받은 등록 아이디를 전송한다.
+                    // 등록 아이디는 서버에서 앱에 푸쉬 메시지를 전송할 때 사용된다.
+                    sendRegistrationIdToBackend();
+
+                    // 등록 아이디를 저장해 등록 아이디를 매번 받지 않도록 한다.
+                    storeRegistrationId(context, regid);
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+                    // If there is an error, don't just keep trying to register.
+                    // Require the user to click a button again, or perform
+                    // exponential back-off.
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+                System.out.println("****************************************************************************** msg : " + msg);
+            }
+
+        }.execute(null, null, null);
+    }
+
+    // SharedPreferences에 발급받은 등록 아이디를 저장해 등록 아이디를 여러 번 받지 않도록 하는 데 사용
+    private void storeRegistrationId(Context context, String regid) {
+        final SharedPreferences prefs = getGCMPreferences(context);
+        int appVersion = getAppVersion(context);
+        System.out.println("************************************************* Saving regId on app version " + appVersion);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PROPERTY_REG_ID, regid);
+        editor.putInt(PROPERTY_APP_VERSION, appVersion);
+        editor.commit();
+    }
+
+    // 등록 아이디를 서버(앱이랑 통신하는 서버)에 전달
+    // 서버는 이 등록 아이디를 사용자마다 따로 저장해두었다가 특정 사용자에게 푸쉬 메시지를 전송할 때 사용할 수 도 있음
+    private void sendRegistrationIdToBackend() {
+        System.out.println("************************************************* 서버에 regid 전달 : " + regid);
+
+        HttpUtil hu = new HttpUtil(context);
+        String[] params = {SERVER_URL, "KEY:1234", "REG:" + regid};
+        hu.execute(params);
+    }
+
+    // 토스트 생성 함수
+    public void printToast(String txt) {
+        Toast.makeText(this, txt, Toast.LENGTH_SHORT).show();
     }
 }
