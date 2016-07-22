@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     // SharedPreferences에 저장할 때 key 값으로 사용됨
     public static final String PROPERTY_APP_VERSION = "appVersion";
 
-    static String SENDER_ID = "11111111111"; // 프로젝트 아이디
-    static String SERVER_URL = "http://111.111.111.111:8080/gcm/sendGCMReg.do"; // 서버 주소
+    static String SENDER_ID = "565254922586"; // 프로젝트 아이디
+    static String SERVER_URL = "http://116.120.119.222:8080/TestServer/sendGCMReg.jsp"; // 서버 주소
     GoogleCloudMessaging gcm;
     Context context;
     String regid;
