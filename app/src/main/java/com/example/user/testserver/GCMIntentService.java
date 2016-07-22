@@ -82,7 +82,8 @@ public class GCMIntentService extends IntentService {
                 null;
         try {
             mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setSmallIcon(R.mipmap.shinhanlogo)
                     .setContentTitle(URLDecoder.decode(extras.getString(TITLE_EXTRA_KEY), "UTF-8"))
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(URLDecoder.decode(extras.getString(MSG_EXTRA_KEY), "UTF-8")))
