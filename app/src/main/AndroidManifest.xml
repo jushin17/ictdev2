@@ -31,6 +31,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".GcmPopupActivity"></activity>
+        <activity android:name=".PushListActivity"></activity>
 
         <!-- GCM 리시버 -->
         <receiver

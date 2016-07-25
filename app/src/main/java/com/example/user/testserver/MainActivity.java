@@ -1,6 +1,7 @@
 package com.example.user.testserver;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -52,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
                 HttpUtil hu = new HttpUtil(context);
                 String[] params = {SERVER_URL, "KEY:1234", "REG:" + regid};
                 hu.execute(params);
+            }
+        });
+
+        btn = (Button) findViewById(R.id.button);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,PushListActivity.class);	//MainActivity ��(this) sub�� .
+                startActivity(intent);
             }
         });
 

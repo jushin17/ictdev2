@@ -15,6 +15,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Calendar;
 
 public class GCMIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
@@ -94,6 +95,19 @@ public class GCMIntentService extends IntentService {
 
         mBuilder.setVibrate(new long[]{0,3000}); // 진동 효과 (퍼미션 필요)
         mBuilder.setAutoCancel(true); // 클릭하면 삭제
+
+
+        Calendar cal = Calendar.getInstance();
+
+
+        PushItem item = new PushItem();
+        item.setTitle(extras.getString(TITLE_EXTRA_KEY));
+        item.setText(extras.getString(MSG_EXTRA_KEY));
+        item.setTime(cal.getTime().toString());
+
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+
+        db.createItems(item);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
