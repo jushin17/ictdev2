@@ -77,13 +77,13 @@ public class GCMIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, GcmPopupActivity.class), 0);
+                new Intent(this, PushListActivity.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 null;
         try {
             mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    //.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setSmallIcon(R.mipmap.shinhanlogo)
                     .setContentTitle(URLDecoder.decode(extras.getString(TITLE_EXTRA_KEY), "UTF-8"))
                     .setStyle(new NotificationCompat.BigTextStyle()
