@@ -76,14 +76,24 @@ public class GCMIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, PushListActivity.class), 0);
 
+        Intent popupIntent = new Intent(getApplicationContext(), GcmPopupActivity.class);
+
+        PendingIntent pie= PendingIntent.getActivity(getApplicationContext(), 0, popupIntent, PendingIntent.FLAG_ONE_SHOT);
+        try {
+            pie.send();
+        } catch (PendingIntent.CanceledException e) {
+            //   Log.degug(e.getMessage());
+        }
+/*
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, GcmPopupActivity.class), 0);
+*/
         NotificationCompat.Builder mBuilder =
                 null;
         try {
             mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                    //.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setSmallIcon(R.mipmap.shinhanlogo)
                     .setContentTitle(URLDecoder.decode(extras.getString(TITLE_EXTRA_KEY), "UTF-8"))
                     .setStyle(new NotificationCompat.BigTextStyle()
@@ -109,7 +119,7 @@ public class GCMIntentService extends IntentService {
 
         db.createItems(item);
 
-        mBuilder.setContentIntent(contentIntent);
+        //mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
