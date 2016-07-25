@@ -83,4 +83,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return items;
     }
+
+    public void deleteItem(String time) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLENAME+ " WHERE " + TIME + " = '" + time + "'";
+        Log.e("query test ", query);
+        db.execSQL(query);
+    }
 }
