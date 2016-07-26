@@ -1,18 +1,28 @@
 package com.example.user.testserver;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.PowerManager;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Created by user on 2016-07-22.
  */
 public class GcmPopupActivity extends Activity{
+    private PushItem item;
+    private TextView textView1;
+    private TextView textView2;
+    private TextView textView3;
+    private Button checkbtn;
+    private Button closebtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +34,37 @@ public class GcmPopupActivity extends Activity{
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup_activity);
+
+        Intent intent = getIntent();
+        item = (PushItem) intent.getSerializableExtra("push");
+
+        textView1 = (TextView) findViewById(R.id.pushtitle);
+        textView2 = (TextView) findViewById(R.id.pushtext);
+        textView3 = (TextView) findViewById(R.id.pushtime);
+
+        textView1.setText(item.getTitle());
+        textView2.setText(item.getText());
+        textView3.setText(item.getTime());
+
+        checkbtn=(Button)findViewById(R.id.checkupbtn);
+        closebtn=(Button)findViewById(R.id.cancelbtn);
+
+        checkbtn.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                Intent intent = new Intent(GcmPopupActivity.this,PushListActivity.class);
+
+                startActivity(intent);
+                finish();
+            }
+        });
+        closebtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                finish();
+            }
+        });
+
 
 
     }

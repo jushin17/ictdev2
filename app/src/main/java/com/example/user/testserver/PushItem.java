@@ -1,9 +1,11 @@
 package com.example.user.testserver;
 
+import java.io.Serializable;
+
 /**
  * Created by user on 2016-07-25.
  */
-public class PushItem {
+public class PushItem implements Serializable{
     String title;
     String text;
     String time;

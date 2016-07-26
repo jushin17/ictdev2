@@ -13,6 +13,7 @@ import android.support.v7.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Calendar;
@@ -76,7 +77,7 @@ public class GCMIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-
+/*
         Intent popupIntent = new Intent(getApplicationContext(), GcmPopupActivity.class);
 
         PendingIntent pie= PendingIntent.getActivity(getApplicationContext(), 0, popupIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -85,10 +86,10 @@ public class GCMIntentService extends IntentService {
         } catch (PendingIntent.CanceledException e) {
             //   Log.degug(e.getMessage());
         }
-/*
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, GcmPopupActivity.class), 0);
 */
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, PushListActivity.class), 0);
+
         NotificationCompat.Builder mBuilder =
                 null;
         try {
@@ -119,7 +120,18 @@ public class GCMIntentService extends IntentService {
 
         db.createItems(item);
 
-        //mBuilder.setContentIntent(contentIntent);
+        Intent popupIntent = new Intent(getApplicationContext(), GcmPopupActivity.class);
+
+        popupIntent.putExtra("push", item);
+
+        PendingIntent pie= PendingIntent.getActivity(getApplicationContext(), 0, popupIntent, PendingIntent.FLAG_ONE_SHOT);
+        try {
+            pie.send();
+        } catch (PendingIntent.CanceledException e) {
+            //   Log.degug(e.getMessage());
+        }
+
+        mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
