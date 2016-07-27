@@ -115,7 +115,24 @@ public class GCMIntentService extends IntentService {
         item.setText(extras.getString(MSG_EXTRA_KEY));
         item.setTime(cal.getTime().toString());
 
+        CountItem countItem = new CountItem();
+        countItem.setTitle(extras.getString(TITLE_EXTRA_KEY));
+        countItem.setText(extras.getString(MSG_EXTRA_KEY));
+        countItem.setCount(0);
+
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+
+
+
+        if(db.checkItem(extras.getString(MSG_EXTRA_KEY))) {
+            int count= db.checkCount(extras.getString(MSG_EXTRA_KEY))+1;
+            countItem.setCount(count);
+
+            db.upgradeCount(countItem);
+        }
+        else {
+            db.createCount(countItem);
+        }
 
         db.createItems(item);
 

@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,9 +32,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             +TEXT+" text not null , "
             +TIME+" TIMESTAMP DEFAULT CURRENT_TIMESTAMP );";
 
+
+    public static final String COUNTTABLE = "ErrorCount";
+    public static final String COUNT = "count";
+    private static final String CREATE_COUNT_TABLE = "create table "+COUNTTABLE+"(ID "+
+            "integer primary key autoincrement, "
+            +TITLE+ " text not null , "
+            +TEXT+ " text not null , "
+            +COUNT+ " integer );";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         // creating required tables
@@ -61,6 +72,85 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.e("database", "insert success");
     }
 
+    public void createCount(CountItem item) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(TITLE, item.getTitle());
+        values.put(TEXT, item.getText());
+        values.put(COUNT, 0);
+
+        db.insert(COUNTTABLE, null, values);
+        Log.e("database", "insert success");
+    }
+
+    public void upgradeCount(CountItem item) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(TITLE, item.getTitle());
+        values.put(TEXT, item.getText());
+        values.put(COUNT, item.getCount());
+
+        db.update(COUNTTABLE, values, TEXT + " = ?", new String[]{String.valueOf(item.getText())});
+        Log.e("database", "update success");
+    }
+
+    public boolean checkItem(String err_text) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT * FROM " + COUNTTABLE + " WHERE "
+                + TEXT + " = '" + err_text + "'";
+
+        Log.e("LOG", selectQuery);
+
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        Log.e("LOG", String.valueOf(c.getCount()));
+        if (c.getCount() <= 0) {
+            return false;
+        }
+        c.close();
+        return true;
+    }
+
+    public int checkCount(String err_text) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT * FROM " + COUNTTABLE + " WHERE "
+                + TEXT + " = '" + err_text + "'";
+
+        Log.e("LOG", selectQuery);
+
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        return c.getInt(c.getColumnIndex(COUNT));
+    }
+
+
+
+    public List<CountItem> getAllCount() {
+        // open database
+        SQLiteDatabase db = this.getWritableDatabase();
+
+
+        List<CountItem> items = new ArrayList<CountItem>();
+        String selectQuery = "SELECT * FROM " + COUNTTABLE;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+                CountItem item = new CountItem();
+                item.setTitle(c.getString(c.getColumnIndex(TITLE)));
+                item.setText(c.getString(c.getColumnIndex(TEXT)));
+                item.setCount(c.getInt(c.getColumnIndex(COUNT)));
+                items.add(item);
+            } while (c.moveToNext());
+        }
+        return items;
+    }
 
 
     public List<PushItem> getAllItems() {
