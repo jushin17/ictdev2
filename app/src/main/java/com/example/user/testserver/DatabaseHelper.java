@@ -196,6 +196,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return countresult;
     }
 
+    public int[] countServer() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int[] servercount = new int[3];
+        for(int i=1;i<4;i++) {
+            String selectQuery = "SELECT * FROM " + TABLENAME + " WHERE "
+                    + TITLE + " = 'server"+i+"'";
+            Cursor c = db.rawQuery(selectQuery, null);
+            servercount[i-1] = c.getCount();
+        }
+        return servercount;
+    }
+
 
 
     public List<CountItem> getAllCount() {

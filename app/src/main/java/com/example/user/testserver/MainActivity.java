@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     GoogleCloudMessaging gcm;
     Context context;
     String regid;
-    private Button reg_btn, push_list_btn, count_push_list_btn, setting_btn;
+    private Button reg_btn, push_list_btn, count_push_list_btn, setting_btn, chart_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +79,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,SettingActivity.class);	//MainActivity ��(this) sub�� .
+                startActivity(intent);
+            }
+        });
+
+        chart_btn = (Button) findViewById(R.id.chartbtn);
+        chart_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,ChartActivity.class);	//MainActivity ��(this) sub�� .
                 startActivity(intent);
             }
         });
