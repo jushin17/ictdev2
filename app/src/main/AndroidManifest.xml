@@ -30,8 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GcmPopupActivity"></activity>
+        <activity android:name=".GcmPopupActivity" android:theme="@android:style/Theme.Translucent" ></activity>
         <activity android:name=".PushListActivity"></activity>
+        <activity android:name=".CountPushListActivity"></activity>
+        <activity android:name=".SettingActivity"></activity>
 
         <!-- GCM 리시버 -->
         <receiver

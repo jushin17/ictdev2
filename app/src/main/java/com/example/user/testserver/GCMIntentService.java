@@ -44,6 +44,8 @@ public class GCMIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received
@@ -60,7 +62,20 @@ public class GCMIntentService extends IntentService {
 
                 // Post notification of received message.
                 System.out.println("************************************************* 상태바 알림 호출");
-                sendNotification(extras);
+
+                if(extras.getString(TITLE_EXTRA_KEY).equals("server1")) {
+                    if(db.checkServer("server1"))
+                        sendNotification(extras);
+                }
+                if(extras.getString(TITLE_EXTRA_KEY).equals("server2")) {
+                    if(db.checkServer("server2"))
+                        sendNotification(extras);
+                }
+                if(extras.getString(TITLE_EXTRA_KEY).equals("server3")) {
+                    if(db.checkServer("server3"))
+                        sendNotification(extras);
+                }
+
                 System.out.println("************************************************* Received toString : " + extras.toString());
             }
         }
@@ -119,7 +134,7 @@ public class GCMIntentService extends IntentService {
         CountItem countItem = new CountItem();
         countItem.setTitle(extras.getString(TITLE_EXTRA_KEY));
         countItem.setText(extras.getString(MSG_EXTRA_KEY));
-        countItem.setCount(0);
+
 
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
 
@@ -130,8 +145,12 @@ public class GCMIntentService extends IntentService {
             countItem.setCount(count);
 
             db.upgradeCount(countItem);
+            System.out.println("기존에 존재");
         }
         else {
+            System.out.println("처음만들때");
+            int firstpush = 1;
+            countItem.setCount(firstpush);
             db.createCount(countItem);
         }
 

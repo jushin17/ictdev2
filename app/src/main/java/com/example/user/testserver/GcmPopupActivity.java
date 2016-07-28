@@ -13,6 +13,9 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by user on 2016-07-22.
  */
@@ -27,9 +30,14 @@ public class GcmPopupActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+*/
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+
 
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -64,6 +72,16 @@ public class GcmPopupActivity extends Activity{
                 finish();
             }
         });
+
+        Timer timer = new Timer();
+        timer.schedule( new TimerTask()
+                        {
+                            public void run()
+                            {
+                                finish();
+                            }
+                        }
+                , 5000);
 
 
 

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class CountPushListActivity extends ActionBarActivity {
     ListView listview;
-    ListViewAdapter adapter;
+    CountListViewAdapter adapter;
     List<CountItem> items;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class CountPushListActivity extends ActionBarActivity {
 
 
         // Adapter 생성
-        adapter = new ListViewAdapter() ;
+        adapter = new CountListViewAdapter() ;
         prepareListData();
         // 리스트뷰 참조 및 Adapter달기
 
@@ -46,7 +46,7 @@ public class CountPushListActivity extends ActionBarActivity {
         items = db.getAllCount();
 
         for (CountItem item : items) {
-            adapter.addItem(item.getTitle().toString(),item.getText().toString(),Integer.toString(item.getCount()));
+            adapter.addItem(item.getTitle().toString(),item.getText().toString(),item.getCount());
         }
     }
 /*

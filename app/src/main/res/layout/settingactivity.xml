@@ -10,46 +10,60 @@
     android:orientation="vertical"
     tools:context="com.example.user.testserver.MainActivity">
 
-    <Button
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="알림을 받고자 하는 서버를 선택해주세요."
+        android:textColor="#000000"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal|center_vertical"/>
+
+    <CheckBox
+        android:id="@+id/server1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Registration to Server"
-        android:id="@+id/button"
+        android:layout_marginTop="30dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:text="Server 1"
+        android:checked="true"
         android:textColor="#000000"/>
 
-    <Button
-        android:id="@+id/pushlistbtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="Push List"
-        android:textColor="#000000"/>
-
-    <Button
-        android:id="@+id/countpushlistbtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="Count Push List"
-        android:textColor="#000000"/>
-
-    <Button
-        android:id="@+id/settingbtn"
+    <CheckBox
+        android:id="@+id/server2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Setting"
+        android:layout_marginTop="30dp"
+        android:text="Server 2"
+        android:checked="true"
         android:textColor="#000000"/>
 
+    <CheckBox
+        android:id="@+id/server3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
+        android:text="Server 3"
+        android:checked="true"
+        android:textColor="#000000"/>
 
+    <Button
+        android:id="@+id/submitbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp"
+        android:text="선택 완료"
+        android:textColor="#000000"/>
 
 </LinearLayout>

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     GoogleCloudMessaging gcm;
     Context context;
     String regid;
-    private Button btn;
+    private Button reg_btn, push_list_btn, count_push_list_btn, setting_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         context = this;
 
-        btn = (Button) findViewById(R.id.button);
-        btn.setOnClickListener(new View.OnClickListener() {
+        reg_btn = (Button) findViewById(R.id.button);
+        reg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 HttpUtil hu = new HttpUtil(context);
@@ -56,11 +56,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn = (Button) findViewById(R.id.pushlistbtn);
-        btn.setOnClickListener(new View.OnClickListener() {
+        push_list_btn = (Button) findViewById(R.id.pushlistbtn);
+        push_list_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,PushListActivity.class);	//MainActivity ��(this) sub�� .
+                startActivity(intent);
+            }
+        });
+
+        count_push_list_btn = (Button) findViewById(R.id.countpushlistbtn);
+        count_push_list_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,CountPushListActivity.class);	//MainActivity ��(this) sub�� .
+                startActivity(intent);
+            }
+        });
+
+        setting_btn = (Button) findViewById(R.id.settingbtn);
+        setting_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,SettingActivity.class);	//MainActivity ��(this) sub�� .
                 startActivity(intent);
             }
         });

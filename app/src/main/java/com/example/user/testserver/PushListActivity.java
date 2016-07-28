@@ -54,7 +54,22 @@ public class PushListActivity extends ActionBarActivity {
                     @Override
                     public void onClick( DialogInterface dialog, int which ) {
                         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                        db.deleteItem(finalDelete.getTime().toString());
+                        db.deleteItem(finalDelete.getTitle()+finalDelete.getText()+finalDelete.getTime());
+
+                        int count = db.checkCount(finalDelete.getText())-1;
+
+
+
+                        CountItem countItem = new CountItem();
+                        countItem.setCount(count);
+                        countItem.setText(finalDelete.getText());
+                        countItem.setTitle(finalDelete.getTitle());
+
+                        db.upgradeCount(countItem);
+
+                        if(count == 0) {
+                            db.deleteCount(finalDelete.getText());
+                        }
 
                         prepareListData();
                         // 리스트뷰 참조 및 Adapter달기
