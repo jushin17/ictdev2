@@ -15,21 +15,26 @@ import org.eazegraph.lib.models.PieModel;
  * Created by user on 2016-07-28.
  */
 public class BarChartActivity extends FragmentActivity {
+    private final static int DEFAULT_COLOR = Color.GRAY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.barchartactivity);
-        //DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
 
-        String[] mLabels= {"A", "B", "C", "D"};
-        float [] mValues = {6.5f, 8.5f, 2.5f, 10f};
+        float[] errorcount= new float[9];
+        errorcount = db.countError();
+
+        String[] mLabels= {"Serv1 err1", "Serv1 err2", "Serv1 err3", "Serv2 err1", "Serv2 err2", "Serv2 err3", "Serv3 err1", "Serv3 err2", "Serv3 err3"};
 
         BarChartView barChart = (BarChartView) findViewById(R.id.barchart);
 
 
 
-        BarSet barSet = new BarSet(mLabels, mValues);
+        BarSet barSet = new BarSet(mLabels, errorcount);
+        barSet.setColor(DEFAULT_COLOR);
 
         barChart.addData(barSet);
+        barChart.show();
     }
 }

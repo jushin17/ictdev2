@@ -133,7 +133,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(STRINGKEY, item.getTitle()+item.getText()+item.getTime());
 
         db.insert(TABLENAME, null, values);
-        Log.e("database", "insert success");
+
+        Log.e("database", item.getText().toString());
     }
 
     public void createCount(CountItem item) {
@@ -207,6 +208,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             servercount[i-1] = c.getCount();
         }
         return servercount;
+    }
+
+    public float[] countError() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        float[] errorcount = new float[9];
+        for(int i=1;i<4;i++) {
+            for(int j=1;j<4;j++) {
+                String selectQuery = "SELECT * FROM " + TABLENAME + " WHERE "
+                        + TEXT + " = 'error+s" + i + ".message"+j+"'";
+                Cursor c = db.rawQuery(selectQuery,null);
+                errorcount[(i-1)*3+j-1] = c.getCount();
+            }
+        }
+        return errorcount;
     }
 
 

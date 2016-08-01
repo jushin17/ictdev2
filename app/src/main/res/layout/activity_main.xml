@@ -13,7 +13,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Registration to Server"
+        android:text="서버에 기기 등록"
         android:id="@+id/button"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -27,7 +27,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Push List"
+        android:text="에러메시지 리스트"
         android:textColor="#000000"/>
 
     <Button
@@ -37,17 +37,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Count Push List"
-        android:textColor="#000000"/>
-
-    <Button
-        android:id="@+id/settingbtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="Setting"
+        android:text="에러메시지별 개수"
         android:textColor="#000000"/>
 
     <Button
@@ -57,7 +47,26 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Chart"
+        android:text="서버별 에러메시지 차트"
+        android:textColor="#000000"/>
+    <Button
+        android:id="@+id/barchartbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="에러메시지별 차트"
+        android:textColor="#000000"/>
+
+    <Button
+        android:id="@+id/settingbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="설정"
         android:textColor="#000000"/>
 
 
