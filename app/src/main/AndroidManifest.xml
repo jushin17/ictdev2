@@ -35,6 +35,7 @@
         <activity android:name=".PushListActivity"></activity>
         <activity android:name=".CountPushListActivity"></activity>
         <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".ExpandableListForItems"></activity>
         <activity android:name=".ChartActivity"
             android:screenOrientation="landscape"></activity>
         <activity android:name=".BarChartActivity"

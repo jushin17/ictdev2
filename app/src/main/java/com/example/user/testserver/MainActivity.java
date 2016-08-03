@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         count_push_list_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,CountPushListActivity.class);	//MainActivity ��(this) sub�� .
+                Intent intent = new Intent(MainActivity.this,ExpandableListForItems.class);	//MainActivity ��(this) sub�� .
                 startActivity(intent);
             }
         });
